@@ -90,29 +90,74 @@
             element.dispatchEvent(new Event('change', { bubbles: true }));
             console.log(`input simulated for element with new value : ${value}`);
         }
-        
+
         initialCheck()
 
     }
 
+    function closeCurrentMenu() {
+        var closeButton = document.evaluate('/html/body/div[3]/div/div/div/div/div[2]/div/button', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+        if (closeButton) {
+            closeButton.click();
+            console.log("Menu closed");
+        } else {
+            console.error('close button not found, could not close menu');
+        }
+    }
+
+    function clickNextSubmitButton(buttonIndex) {
+        var NextSubmitButton = document.evaluate('/html/body/div[3]/div/div/div/div/div[2]/div/div[3]/button', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+        if (NextSubmitButton && NextSubmitButton.offsetWidth > 0 && NextSubmitButton.offsetHeight > 0) { //making sure the button is rendered due to random delays
+            NextSubmitButton.click();
+            console.log('Next submit button for button ' + (buttonIndex + 1) + ' clicked successfully');
+            setTimeout(clickDisclaimerElement.bind(null, buttonIndex), 1000);
+        } else {
+            console.error('next submit button for button ' + (buttonIndex + 1) + 'not found, retrying now');
+            setTimeout(clickNextSubmitButton.bind(null, buttonIndex), 1000);
+            window.location.reload();
+        }
+    }
+
+    function clickDisclaimerElement(buttonIndex) {
+        var DisclaimerElement = document.evaluate('/html/body/div[3]/div/div/div/div/div[2]/div/div[2]/label/div[2]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+
+        if (DisclaimerElement) {
+            DisclaimerElement.click();
+            console.log("Disclaimer element clicked successfully");
+            setTimeout(clickFinalSubmitButton.bind(null, buttonIndex), 1000);
+        } else {
+            console.error('Disclaimer element not found');
+            window.location.reload();
+        }
 
 
-    
+    }
 
+    function clickFinalSubmitButton(buttonIndex) {
+        var finalSubmitButton = document.evaluate('/html/body/div[3]/div/div/div/div/div[2]/div/div[3]/button[2]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+        if (finalSubmitButton && finalSubmitButton.offsetHeight > 0 && finalSubmitButton.offsetWidth > 0) { // button is visible and interactable
+            finalSubmitButton.click();
+            console.log('Final submit button for button ' + (buttonIndex + 1) + ' clicked successfully')
 
+            // increment the button index for the next iteration 
+            buttonIndex++;
 
+            //recursive call to process next button after a delay 
+            setTimeout(clickFirstButtons.bind(null, buttonIndex), 1000);
 
+        } else {
+            console.error('Final submit button for button ' + (buttonIndex + 1) + ' not found or not clickable, retrying...');
+            setTimeout(clickFinalSubmitButton.bind(null, buttonIndex), 1000);
+        }
 
+    }
 
+    function startScript() {
+        var delay = 3000;
+        var buttonIndex = parseInt(localStorage.getItem('currentButtonIndex'), 10) || 0;
+        setTimeout(clickFirstButtons, delay, buttonIndex);
+    }
 
-
-
-
-
-
-
-
-
-
+    startScript();
 
 })();
