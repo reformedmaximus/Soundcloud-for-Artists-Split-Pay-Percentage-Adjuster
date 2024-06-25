@@ -65,36 +65,39 @@
                 }
             }
 
-            if (targetInput40 && targetInput60 && targetInput40.value === '40' && targetInput60.value === '60' ){
+            if (targetInput40 && targetInput60 && targetInput40.value === '40' && targetInput60.value === '60') {
                 console.log('No value adjustment needed. Closing menu and moving to the next button.');
                 closeCurrentMenu();
-                setTimeout(clickFirstButtons.bind(null,buttonIndex+1), 500);
+                setTimeout(clickFirstButtons.bind(null, buttonIndex + 1), 500);
             } else {
                 simulateInput(targetInput60, '60');
-                simulateInput(targetInput60, '60');
+                simulateInput(targetInput40, '40');
                 console.log('values adjust to 60 and 40 percent');
-                setTimeout(clickNextSubmitButton.bind(null,buttonIndex), 500);
+                setTimeout(clickNextSubmitButton.bind(null, buttonIndex), 500);
             }
-            function simulateInput(element, value) {}
-
-
-
-
-
 
         }
+
+        function simulateInput(element, value) {
+            if (!element) {
+                console.error('Element not found cannot simulate input');
+                return;
+            }
+
+            var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+            nativeInputValueSetter.call(element, value);
+            element.dispatchEvent(new Event('input', { bubbles: true }));
+            element.dispatchEvent(new Event('change', { bubbles: true }));
+            console.log(`input simulated for element with new value : ${value}`);
+        }
+        
         initialCheck()
-
-
-
-
-
-
-
-
 
     }
 
+
+
+    
 
 
 
