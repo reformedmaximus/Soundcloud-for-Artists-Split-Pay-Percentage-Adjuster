@@ -64,7 +64,7 @@
                     console.log('other input found: ', targetInput40);
                 }
             }
-
+            // configuration section
             if (targetInput40 && targetInput60 && targetInput40.value === '40' && targetInput60.value === '60') { //this part is for checking if the split payees are already adjusted to save time & improve script performance
                 console.log('No value adjustment needed. Closing menu and moving to the next button.');
                 closeCurrentMenu();
