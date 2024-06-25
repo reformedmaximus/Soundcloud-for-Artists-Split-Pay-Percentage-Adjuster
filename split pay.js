@@ -65,13 +65,13 @@
                 }
             }
 
-            if (targetInput40 && targetInput60 && targetInput40.value === '40' && targetInput60.value === '60') {
+            if (targetInput40 && targetInput60 && targetInput40.value === '40' && targetInput60.value === '60') { //this part is for checking if the split payees are already adjusted to save time & improve script performance
                 console.log('No value adjustment needed. Closing menu and moving to the next button.');
                 closeCurrentMenu();
                 setTimeout(clickFirstButtons.bind(null, buttonIndex + 1), 500);
             } else {
-                simulateInput(targetInput60, '60');
-                simulateInput(targetInput40, '40');
+                simulateInput(targetInput60, '60'); //adding 60% to the split payee I targeted as we will always need a reference point due to dynamic location of the split payee elements
+                simulateInput(targetInput40, '40'); //adding 40% to the other split payee
                 console.log('values adjust to 60 and 40 percent');
                 setTimeout(clickNextSubmitButton.bind(null, buttonIndex), 500);
             }
@@ -129,7 +129,6 @@
             console.error('Disclaimer element not found');
             window.location.reload();
         }
-
 
     }
 
